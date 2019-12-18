@@ -39,7 +39,7 @@ channels = ["evaluation":0, "prediction":1]
 TRAINING_SCE.choice(TRAIN_TEST_SPLIT, PROCESS_TRAIN_SCE){channels[method]}
 
 process eval_train_test_split{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -67,7 +67,7 @@ process eval_train_test_split{
 }
 
 process eval_eigen_decompose{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -90,7 +90,7 @@ process eval_eigen_decompose{
 }
 
 process eval_get_features{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -112,7 +112,7 @@ process eval_get_features{
 }
 
 process eval_train_model{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -135,7 +135,7 @@ process eval_train_model{
 
 process eval_predict_labels{
   publishDir "${baseDir}/data/evaluation_outputs", mode: 'copy'
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -173,7 +173,7 @@ if(method == 'prediction'){
 }
 
 process read_prediction_data{
-  conda '$baseDir/envs/dropletutils.yaml'
+  conda "${baseDir}/envs/dropletutils.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -194,7 +194,7 @@ process read_prediction_data{
 }
 
 process pred_process_training_sce{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -217,7 +217,7 @@ process pred_process_training_sce{
 }
 
 process pred_process_prediction_sce{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -238,7 +238,7 @@ process pred_process_prediction_sce{
 }
 
 process pred_eigen_decompose{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -261,7 +261,7 @@ process pred_eigen_decompose{
 }
 
 process pred_get_features{
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -284,7 +284,7 @@ process pred_get_features{
 
 process pred_train_model{
   publishDir "${baseDir}/data/prediction_outputs", mode: 'copy'
-  conda '$baseDir/envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
@@ -309,7 +309,7 @@ process pred_train_model{
 
 process pred_predict_labels{
   publishDir "${baseDir}/data/prediction_outputs", mode: 'copy'
-  conda 'envs/scpred.yaml'
+  conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
   maxRetries 5
