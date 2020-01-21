@@ -24,4 +24,4 @@ opt = wsc_parse_args(option_list, mandatory = c("predictions_file", "workflow_ou
 data = read.csv(opt$predictions_file)
 output = cbind(cell_id=as.character(data[, 1]), pred_label=as.character(data[, "predClass"]))
 colnames(output) = c('cell_id', "predicted_label")
-write.csv(output, file = opt$workflow_output)
+write.table(output, file = opt$workflow_output, sep="\t", row.names=FALSE)

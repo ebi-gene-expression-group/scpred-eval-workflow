@@ -336,7 +336,7 @@ process pred_predict_labels{
 //  .set{SCPRED_RESULTS}
 
 process get_pred_output{
-  publishDir "${baseDir}/data/prediction_outputs", mode: 'copy'
+  publishDir "${params.results_dir}", mode: 'copy' // send the table into 'outer' workflow
   conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
@@ -346,11 +346,11 @@ process get_pred_output{
   input:
     file(model_predicitons) from PRED_MODEL_PREDICTIONS
   output:
-    file("final_output_scpred.txt") into FINAL_TABLE
+    file("scpred_output.txt") into FINAL_TABLE
 
   """
   get_workflow_output.R\
             --predictions-file ${model_predicitons}\
-            --workflow-output final_output_scpred.txt
+            --workflow-output scpred_output.txt
   """
 }
