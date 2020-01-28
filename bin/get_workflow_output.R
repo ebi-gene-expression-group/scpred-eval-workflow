@@ -25,5 +25,5 @@ data = read.csv(opt$predictions_file)
 output = cbind(cell_id=as.character(data[, 1]), pred_label=as.character(data[, "predClass"]))
 colnames(output) = c('cell_id', "predicted_label")
 # get rid of the goddamn dots
-output[, "predicted_label"] = sapply(output[, "predicted_label"], function(x) x = sub(pattern = '.', replacement = ' ', x, fixed = TRUE))
+output[, "predicted_label"] = sapply(output[, "predicted_label"], function(x) x = gsub(pattern = '.', replacement = ' ', x, fixed = TRUE))
 write.table(output, file = opt$workflow_output, sep="\t", row.names=FALSE)
