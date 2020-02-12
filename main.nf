@@ -146,11 +146,6 @@ process eval_predict_labels{
     file(test_matrix) from EVAL_TEST_MATRIX
     file(test_labels) from EVAL_TEST_LABELS
 
-  output:
-    //file("${params.model_predictions_path}") into EVAL_MODEL_PREDICTIONS
-    //file("${params.prediction_probs_path}") into EVAL_PRED_PROBS
-    //file("${params.confusion_table_path}") into EVAL_CONFUSION_TABLE
-
   """
   scpred_predict.R\
           --input-object ${eval_trained_model}\
@@ -330,11 +325,6 @@ process pred_predict_labels{
   """
 }
 
-// fetch output from relevant channel 
-//EVAL_MODEL_PREDICTIONS
-//  .mix(PRED_MODEL_PREDICTIONS)
-//  .set{SCPRED_RESULTS}
-
 process get_pred_output{
   publishDir "${params.results_dir}", mode: 'copy' // send the table into 'outer' workflow
   conda "${baseDir}/envs/scpred.yaml"
@@ -349,8 +339,8 @@ process get_pred_output{
     file("scpred_output.txt") into FINAL_TABLE
 
   """
-  get_workflow_output.R\
-            --predictions-file ${model_predicitons}\
-            --workflow-output scpred_output.txt
+  scpred_get_std_output.R\
+          --predictions-file ${model_predicitons}\
+          --output-table scpred_output.txt
   """
 }

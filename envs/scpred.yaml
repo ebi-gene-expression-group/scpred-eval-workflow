@@ -5,6 +5,6 @@ channels:
   - defaults 
 dependencies:
   - openblas
-  - scpred-cli=0.0.3 
+  - scpred-cli=0.0.4 
   - bioconductor-singlecellexperiment=1.6.0
   
