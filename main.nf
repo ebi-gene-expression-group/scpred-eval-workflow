@@ -9,8 +9,8 @@ TRAINING_METADATA = Channel.fromPath(params.metadata_file)
 process read_training_data{
   conda "${baseDir}/envs/dropletutils.yaml"
 
-  errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
-  maxRetries 5
+  errorStrategy { task.exitStatus == 130 || task.exitStatus == 137  ? 'retry' : 'finish' }   
+  maxRetries 10
   memory { 16.GB * task.attempt }
 
   input: 
@@ -41,8 +41,8 @@ TRAINING_SCE.choice(TRAIN_TEST_SPLIT, PROCESS_TRAIN_SCE){channels[method]}
 process eval_train_test_split{
   conda "${baseDir}/envs/scpred.yaml"
 
-  errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
-  maxRetries 5
+  errorStrategy { task.exitStatus == 130 || task.exitStatus == 137  ? 'retry' : 'finish' }   
+  maxRetries 10
   memory { 16.GB * task.attempt }
 
   input:
@@ -69,8 +69,8 @@ process eval_train_test_split{
 process eval_eigen_decompose{
   conda "${baseDir}/envs/scpred.yaml"
 
-  errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
-  maxRetries 5
+  errorStrategy { task.exitStatus == 130 || task.exitStatus == 137  ? 'retry' : 'finish' }   
+  maxRetries 10
   memory { 16.GB * task.attempt }
 
   input:
@@ -145,11 +145,6 @@ process eval_predict_labels{
     file(eval_trained_model) from EVAL_TRAINED_MODEL
     file(test_matrix) from EVAL_TEST_MATRIX
     file(test_labels) from EVAL_TEST_LABELS
-
-  output:
-    //file("${params.model_predictions_path}") into EVAL_MODEL_PREDICTIONS
-    //file("${params.prediction_probs_path}") into EVAL_PRED_PROBS
-    //file("${params.confusion_table_path}") into EVAL_CONFUSION_TABLE
 
   """
   scpred_predict.R\
@@ -330,13 +325,8 @@ process pred_predict_labels{
   """
 }
 
-// fetch output from relevant channel 
-//EVAL_MODEL_PREDICTIONS
-//  .mix(PRED_MODEL_PREDICTIONS)
-//  .set{SCPRED_RESULTS}
-
 process get_pred_output{
-  publishDir "${baseDir}/data/prediction_outputs", mode: 'copy'
+  publishDir "${params.results_dir}", mode: 'copy' // send the table into 'outer' workflow
   conda "${baseDir}/envs/scpred.yaml"
 
   errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
@@ -346,11 +336,11 @@ process get_pred_output{
   input:
     file(model_predicitons) from PRED_MODEL_PREDICTIONS
   output:
-    file("final_output_scpred.txt") into FINAL_TABLE
+    file("scpred_output.txt") into FINAL_TABLE
 
   """
-  get_workflow_output.R\
-            --predictions-file ${model_predicitons}\
-            --workflow-output final_output_scpred.txt
+  scpred_get_std_output.R\
+          --predictions-file ${model_predicitons}\
+          --output-table scpred_output.txt
   """
 }
