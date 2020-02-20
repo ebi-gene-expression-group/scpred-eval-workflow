@@ -9,8 +9,8 @@ TRAINING_METADATA = Channel.fromPath(params.metadata_file)
 process read_training_data{
   conda "${baseDir}/envs/dropletutils.yaml"
 
-  errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
-  maxRetries 5
+  errorStrategy { task.exitStatus == 130 || task.exitStatus == 137  ? 'retry' : 'finish' }   
+  maxRetries 10
   memory { 16.GB * task.attempt }
 
   input: 
@@ -41,8 +41,8 @@ TRAINING_SCE.choice(TRAIN_TEST_SPLIT, PROCESS_TRAIN_SCE){channels[method]}
 process eval_train_test_split{
   conda "${baseDir}/envs/scpred.yaml"
 
-  errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
-  maxRetries 5
+  errorStrategy { task.exitStatus == 130 || task.exitStatus == 137  ? 'retry' : 'finish' }   
+  maxRetries 10
   memory { 16.GB * task.attempt }
 
   input:
@@ -69,8 +69,8 @@ process eval_train_test_split{
 process eval_eigen_decompose{
   conda "${baseDir}/envs/scpred.yaml"
 
-  errorStrategy { task.attempt < 5  ? 'retry' : 'finish' }   
-  maxRetries 5
+  errorStrategy { task.exitStatus == 130 || task.exitStatus == 137  ? 'retry' : 'finish' }   
+  maxRetries 10
   memory { 16.GB * task.attempt }
 
   input:
