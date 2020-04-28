@@ -341,6 +341,7 @@ process get_pred_output{
   """
   scpred_get_std_output.R\
           --predictions-file ${model_predicitons}\
+	  --classifier "scpred_output.rds"\
           --output-table scpred_output.txt
   """
 }
