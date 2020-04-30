@@ -46,10 +46,10 @@ process eval_train_test_split{
   memory { 16.GB * task.attempt }
 
   input:
-    file(training_sce) from TRAIN_TEST_SPLIT
+    file(training_sce) from TRAIN_TEST_SPLIT.first()
 
   output:
-    file("training_matrix.rds") into EVAL_TRAINING_MATRIX
+    file("training_matrixdrds") into EVAL_TRAINING_MATRIX
     file("test_matrix.rds") into EVAL_TEST_MATRIX
     file("training_labels.txt") into EVAL_TRAINING_LABELS
     file("test_labels.txt") into EVAL_TEST_LABELS
@@ -196,7 +196,7 @@ process pred_process_training_sce{
   memory { 16.GB * task.attempt }
 
   input:
-    file(training_sce) from PROCESS_TRAIN_SCE
+    file(training_sce) from PROCESS_TRAIN_SCE.first()
 
   output:
     file("training_matrix.rds") into PRED_TRAINING_MATRIX
@@ -289,7 +289,7 @@ process pred_train_model{
     file(scpred_training_features) from PRED_TRAINING_FEATURES
 
   output:
-    file("pred_trained_model.rds") into PRED_TRAINED_MODEL
+    file("pred_trained_model.rds") into PRED_TRAINED_MODEL 
     file("${params.train_probs_plot_path}") into PRED_TRAIN_PROBS
 
 
@@ -335,13 +335,14 @@ process get_pred_output{
 
   input:
     file(model_predicitons) from PRED_MODEL_PREDICTIONS
+    file(pred_trained_model) from PRED_TRAINED_MODEL
   output:
     file("scpred_output.txt") into FINAL_TABLE
 
   """
   scpred_get_std_output.R\
           --predictions-file ${model_predicitons}\
-	  --classifier "scpred_output.rds"\
+	  --classifier ${pred_trained_model}\
           --output-table scpred_output.txt
   """
 }
