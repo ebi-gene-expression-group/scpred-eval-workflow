@@ -49,7 +49,7 @@ process eval_train_test_split{
     file(training_sce) from TRAIN_TEST_SPLIT.first()
 
   output:
-    file("training_matrixdrds") into EVAL_TRAINING_MATRIX
+    file("training_matrixd.rds") into EVAL_TRAINING_MATRIX
     file("test_matrix.rds") into EVAL_TEST_MATRIX
     file("training_labels.txt") into EVAL_TRAINING_LABELS
     file("test_labels.txt") into EVAL_TEST_LABELS
