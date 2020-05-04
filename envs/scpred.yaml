@@ -4,6 +4,6 @@ channels:
   - conda-forge 
   - defaults 
 dependencies:
-  - scpred-cli=0.0.5 
+  - scpred-cli=0.0.7 
   - bioconductor-singlecellexperiment=1.6.0
   
